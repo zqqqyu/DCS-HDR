@@ -1,1 +1,589 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Capturing Stable HDR Videos Using a Dual-Camera System</title>
+        <link rel="icon" type="image/x-icon" href="/static/img/icons/camera.ico">
 
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Open Graph -->
+        <meta property="og:url" content="https://zqqqyu.github.io/DCS-HDR/" />
+        <meta property="og:image" content="/static/img/preview.png" />
+        <meta property="og:title" content="Capturing Stable HDR Videos Using a Dual-Camera System" />
+        <meta property="og:description" content="The proposed pipeline achieves temporally stable, flicker-free HDR videos and remains compatible with existing HDR deghosting models." />
+
+        <!-- Twitter -->
+        <meta name="twitter:url" content="https://zqqqyu.github.io/DCS-HDR/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="/static/img/preview.png" />
+        <meta name="twitter:title" content="Capturing Stable HDR Videos Using a Dual-Camera System" />
+        <meta name="twitter:description" content="The proposed pipeline achieves temporally stable, flicker-free HDR videos and remains compatible with existing HDR deghosting models." />
+
+        <script src="./static/js/distill_template.v2.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+        <script src="https://rawgit.com/nstrayer/slid3r/master/dist/slid3r.js"></script>
+
+        <script defer="" src="./static/js/hider.js"></script>
+        <script src="./static/js/image_interact.js"></script>
+        <script src="./static/js/switch_videos.js"></script>
+
+        <link rel="stylesheet" href="./static/css/style.css">
+        <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+            onload="renderMathInElement(document.body);"></script>
+        <script defer src="./static/js/fontawesome.all.min.js"></script>
+
+
+        <!-- medium zoom https://github.com/francoischalifour/medium-zoom -->
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>  <!-- jquery -->
+        <script defer src="./static/js/medium-zoom.min.js"></script>
+        <script defer src="./static/js/zoom.js"></script>
+
+        <meta charset="utf-8">
+        <title>Table Example</title>
+        <style>
+          .best {
+            color: red;
+            font-weight: bold;
+          }
+          .secondbest {
+            color: blue;
+            text-decoration: underline;
+          }
+        </style>
+    </head>
+    <body>
+        <div class="header-wrapper">
+            <div class="header-container" id="header-container">
+                <div class="header-content">
+                    <h1 style="margin-top: 0px"><i>Capturing Stable HDR Videos Using a Dual-Camera System</i></h1>
+
+
+                        <div class="icon-container">
+                            <div class="icon-item">
+                                <img src="./static/img/icons/thinking.svg" alt="Visual Representation Icon">
+                                <div><strong>Paradigm</strong>: We introduce a dual-stream HDR video generation paradigm that explicitly decouples temporal luminance anchoring from exposure-variant detail reconstruction.</div>
+                            </div>
+                            <div class="icon-item">
+                                <img src="./static/img/icons/connector.svg" alt="Connector Design Icon">
+                                <div><strong>System</strong>: We design and implement an asynchronous dual-camera system to validate the feasibility of our proposed solution and bridge the gap between algorithmic design and practical deployment.</div>
+                            </div>
+                            <div class="icon-item">
+                                <img src="./static/img/icons/data.svg" alt="Instruction Tuning Data Icon">
+                                <div><strong>Method</strong>: To support our dual-camera system, we propose a novel model design, EAFNet.</div>
+                            </div>
+                            <div class="icon-item">
+                                <img src="./static/img/icons/eval.svg" alt="Instruction Tuning Recipes Icon">
+                                <div><strong>Results</strong>: Our proposed dual-stream HDR video generation paradigm demonstrates significant advancements across multiple aspects.</div>
+                            </div>
+                        </div>
+
+                    <div class="button-container">
+                        <!-- replace arxiv -->
+                        <a href="https://arxiv.org/abs/2507.06593" class="button paper-link" target="_blank">
+                            <span class="icon is-small">
+                                <i class="ai ai-arxiv"></i>
+                            </span>
+                            arXiv
+                        </a>
+                        <!-- replace pdf -->
+                        <a href="https://arxiv.org/abs/2507.06593" class="button paper-link" target="_blank">
+                            <span class="icon is-small">
+                                <i class="fas fa-file-pdf"></i>
+                            </span>
+                            <span>pdf</span>
+                        </a>
+                        <!-- replace image -->
+                        <a href="https://github.com/zqqqyu/DCS" class="button" target="_blank">
+                            <span class="icon is-small">
+                                <i class="fab fa-github"></i>
+                            </span>
+                            <span>Code</span>
+                        </a>
+                        <!-- <br> -->
+                        <a href="https://github.com/zqqqyu/DCS" class="button" target="_blank">
+                            <span class="icon is-small">
+                                <i class="fab fa-github"></i>
+                            </span>
+                            <span>Data</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="header-image">
+                    <img draggable="false" src="static/img/cambrian.png" alt="Teaser Image" class="teaser-image">
+                </div>
+            </div>
+        </div>
+    <d-article>
+        <div class="byline">
+            <div class="byline-container">
+                <p>
+                    <a href="https://github.com/zqqqyu" class="author-link" target="_blank">Qianyu Zhang<sup>1</sup></a> &emsp;
+                    <a href="https://scholar.google.com/citations?user=cZRVzVYAAAAJ" class="author-link" target="_blank">Bolun Zheng<sup>1,*</sup></a> &emsp;
+                    <a href="https://scholar.google.com/citations?user=IhyTEDkAAAAJ" class="author-link" target="_blank">Lingyu Zhu<sup>2</sup></a> &emsp;
+                    <br>
+                    <a href="https://zqqqyu.github.io/DCS-HDR/" class="author-link" target="_blank">Hangjia Pan<sup>1</sup></a> &emsp;
+                    <a href="https://zqqqyu.github.io/DCS-HDR/" class="author-link" target="_blank">Zunjie Zhu<sup>1</sup></a> &emsp;
+                    <a href="https://scholar.google.com/citations?hl=zh-CN&user=UnsBY_AAAAAJ" class="author-link" target="_blank">Zongpeng Li<sup>1</sup></a> &emsp;
+                    <a href="https://scholar.google.com/citations?hl=zh-CN&user=Pr7s2VUAAAAJ" class="author-link" target="_blank">Shiqi Wang<sup>2</sup></a> &emsp;
+                    <p></p>
+                </p>
+                <sup>1</sup>Hangzhou Dianzi University <img src="static/img/logo/hdu.png" alt="HDU logo" style="height: 1em; vertical-align: middle; margin-left: 0px; margin-right: 5px;">,
+                <sup>2</sup>City University of HongKong <img src="static/img/logo/cityu.png" alt="TJU logo" style="height: 1em; vertical-align: middle; margin-left: 0px; margin-right: 5px;">,
+                </p>
+                <p style="text-align: center; margin-bottom: 0;">
+                    <span class="author-note"><sup>*</sup>Corresponding author</span>
+                </p>
+            </div>
+        </div>
+
+
+        <p class="text abstract">
+
+            We present a <strong>dual-camera HDR video paradigm</strong> that decouples temporal luminance anchoring from exposure-variant detail recovery. 
+            In contrast to single-camera alternating-exposure pipelines that often suffer from flicker and ghosting in dynamic scenes, 
+            our design uses a mid-exposure <em>reference stream</em> to stabilize temporal consistency and an <em>auxiliary stream</em> with alternating low/high exposures to supply extreme luminance details.
+
+            <br><br>
+            our contributions can be summarized as follows:
+            <ol class="text">
+                <li><strong><a href="#Paradigm">&sect;Paradigm</a></strong>: We introduce a dual-stream HDR video generation paradigm that explicitly decouples temporal luminance anchoring from exposure-variant detail reconstruction.</li>
+                <li><strong><a href="#System">&sect;System</a></strong>: We design and implement an asynchronous dual-camera system to validate the feasibility of our proposed solution and bridge the gap between algorithmic design and practical deployment.</li>
+                <li><strong><a href="#Method">&sect;Method</a></strong>: To support our dual-camera system, we propose a novel model design, EAFNet.</li>
+                <li><strong><a href="#Results">&sect;Results</a></strong>: Our proposed dual-stream HDR video generation paradigm demonstrates significant advancements across multiple aspects.</li>
+            </ol>
+        </p>
+
+        <div class="icon-row">
+            <a href="#Paradigm" class="icon-link">
+                <img src="static/img/icons/thinking.svg" alt="Visual Representation Logo" class="icon">
+                Paradigm
+            </a>
+            <a href="#System" class="icon-link">
+                <img src="static/img/icons/connector.svg" alt="Connector Logo" class="icon">
+                System
+            </a>
+            <a href="#Method" class="icon-link">
+                <img src="static/img/icons/data.svg" alt="Data Logo" class="icon">
+                Method
+            </a>
+            <a href="#Results" class="icon-link">
+                <img src="static/img/icons/eval.svg" alt="Recipe Logo" class="icon">
+                Results
+            </a>
+        </div>
+
+        <p class="click-hint" style="width: 85%;">
+            <img src="static/img/icons/click.gif" style="width: 1.5rem">
+            <strong>Click to jump to each section.</strong>
+        </p>
+
+
+        <p class="text abstract">
+            The proposed pipeline achieves temporally stable, flicker-free HDR videos and remains compatible with existing HDR deghosting models. 
+            We release <a href="https://github.com/zqqqyu/DCS" target="_blank">code</a>, <a href="https://github.com/zqqqyu/DCS" target="_blank">data</a>, and implementation details to facilitate adoption in real-world HDR video capture.
+        </p>
+
+
+
+        <hr>
+
+        <div id='Results' class="vision-block">
+
+            <div id="sec:benchmarking" class="sub-section">
+                <h1 class="text">Video Comparisons</h1>
+
+  
+                <p class="text">
+                    <strong>to do </strong>
+
+
+
+
+            </div>
+            <div id="cv-bench" class="sub-section">
+
+
+            <div id="sec:benchmarking" class="sub-section">
+                <h1 class="text">Quantitative Comparisons</h1>
+                    <p class="text">
+                        In this sectioin, we focus on dynamic HDR image fusion, presenting both quantitative and qualitative comparisons with state-of-the-art HDR image deghosting methods to validate the effectiveness of our method in single-frame spatial fusion and deghosting.
+                    </p>
+
+
+            </div>
+            <div id="sec:inst_tuning" class="sub-section">
+
+            
+           
+
+                <p class="text">
+                    <strong>Intra-dataset evaluation: </strong>
+
+                    <a href="#tab:hdr_comparison">Table 1</a> reports the intra-dataset evaluation results on Prabhakar’s and Kalantari’s datasets. 
+                    Our EAFNet consistently achieves the best performance across both datasets. 
+                    On the Kalantari dataset, it surpasses the second-best method by 0.08 dB in PSNR-μ, while on the Prabhakar dataset, the margin increases to 0.49 dB. 
+                    These gains are complemented by improvements in SSIM-μ, indicating that our exposure-adaptive fusion strategy benefits both fidelity and structural consistency.
+
+                <div id="tab:hdr_comparison" style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="table-container">
+                      <table class="data-table">
+                        <thead>
+                          <tr>
+                            <th colspan="2" class="tb-hdr"></th>
+                            <th colspan="5" class="tb-hdr">train and test on Kalantari’s dataset</th>
+                            <th colspan="5" class="tb-hdr">train and test on Prabhakar’s dataset</th>
+                          </tr>
+                          <tr>
+                            <th class="section-border">Method</th>
+                            <th class="section-border">Metrics</th>
+                            <th>PSNR-μ (↑)</th>
+                            <th>PSNR-L (↑)</th>
+                            <th>SSIM-μ (↑)</th>
+                            <th>SSIM-L (↑)</th>
+                            <th class="section-border">HDR-VDP-2 (↑)</th>
+                            <th>PSNR-μ (↑)</th>
+                            <th>PSNR-L (↑)</th>
+                            <th>SSIM-μ (↑)</th>
+                            <th>SSIM-L (↑)</th>
+                            <th>HDR-VDP-2 (↑)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td colspan="2" class="section-border">Kalantari (CGF 2017)</td>
+                            <td>42.74</td>
+                            <td>41.22</td>
+                            <td>0.9877</td>
+                            <td>0.9848</td>
+                            <td class="section-border">60.51</td>
+                            <td>35.63</td>
+                            <td>32.50</td>
+                            <td>0.09613</td>
+                            <td>0.9692</td>
+                            <td>59.42</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="section-border">AHDRNet (CVPR 2019)</td>
+                            <td>43.77</td>
+                            <td>41.35</td>
+                            <td>0.9907</td>
+                            <td>0.9859</td>
+                            <td class="section-border">62.30</td>
+                            <td>38.61</td>
+                            <td>35.26</td>
+                            <td>0.9663</td>
+                            <td>0.9794</td>
+                            <td>61.14</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="section-border">Prabhakar (ECCV 2020)</td>
+                            <td>43.08</td>
+                            <td>41.68</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td class="section-border">62.21</td>
+                            <td>38.30</td>
+                            <td>34.98</td>
+                            <td>0.9702</td>
+                            <td>0.9781</td>
+                            <td>-</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="section-border">HDR-Trans (ECCV 2022)</td>
+                            <td>44.28</td>
+                            <td class="secondbest">42.88</td>
+                            <td>0.9916</td>
+                            <td>0.9884</td>
+                            <td>66.03</td>
+                            <td class="secondbest">41.31</td>
+                            <td class="secondbest">39.44</td>
+                            <td class="secondbest">0.9726</td>
+                            <td class="secondbest">0.9885</td>
+                            <td class="secondbest">63.01</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="section-border">DomainPlus (MM 2022)</td>
+                            <td>44.02</td>
+                            <td>41.28</td>
+                            <td>0.9910</td>
+                            <td>0.9864</td>
+                            <td class="section-border">62.91</td>
+                            <td>40.38</td>
+                            <td>38.08</td>
+                            <td>0.9698</td>
+                            <td>0.9872</td>
+                            <td>62.12</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="section-border">SCTNet (ICCV 2023)</td>
+                            <td>44.13</td>
+                            <td>42.12</td>
+                            <td>0.9916</td>
+                            <td>0.9890</td>
+                            <td class="section-border">66.65</td>
+                            <td>41.23</td>
+                            <td>38.75</td>
+                            <td>0.9724</td>
+                            <td>0.9881</td>
+                            <td>62.29</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="section-border">SAFNet (ECCV 2024)</td>
+                            <td class="secondbest">44.61</td>
+                            <td class="best">43.09</td>
+                            <td class="secondbest">0.9918</td>
+                            <td class="secondbest">0.9892</td>
+                            <td class="secondbest">66.93</td>
+                            <td>40.18</td>
+                            <td>37.90</td>
+                            <td>0.9705</td>
+                            <td>0.9865</td>
+                            <td>62.04</td>
+                          </tr>
+                          <tr style="background-color:#FFEEED;">
+                            <td colspan="2" class="section-border">EAFNet (Ours)</td>
+                            <td class="best">44.69</td>
+                            <td>42.19</td>
+                            <td class="best">0.9920</td>
+                            <td class="best">0.9895</td>
+                            <td class="best">68.35</td>
+                            <td class="best">41.80</td>
+                            <td class="best">40.13</td>
+                            <td class="best">0.9731</td>
+                            <td class="best">0.9895</td>
+                            <td class="best">63.53</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <figcaption style="text-align: center; width: 140%;">
+                      Table1: Comparison results on Kalantari’s dataset and Prabhakar’s dataset. Best results are <span class="best">bold red</span>, second-best are <span class="secondbest">underlined blue</span>.
+                    </figcaption>
+                  </div>
+                  
+
+
+                  <p class="text">
+                    <strong>Cross-dataset evaluation: </strong>
+
+                    We further conduct cross-dataset validation, where training and testing are performed on different datasets (<a href="#tab:cross_dataset">Table 2</a>). 
+                    Our EAFNet maintains clear superiority in this challenging setting, with cross-domain gains even larger than in the intra-dataset case. 
+                    This demonstrates that our model does not overfit to dataset-specific statistics, but learns exposure-aware and motion-robust fusion representations that transfer effectively across domains. 
+                    The strong bidirectional results confirm the generality and domain-agnostic nature of our fusion mechanism.
+                
+
+                  <div id="tab:cross_dataset" style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="table-container">
+                      <table class="data-table">
+                        <thead>
+                          <tr>
+                            <th colspan="2" class="tb-hdr"></th>
+                            <th colspan="4" class="tb-hdr">train on Kalantari’s dataset, test on Prabhakar’s dataset</th>
+                            <th colspan="4" class="tb-hdr">train on Prabhakar’s dataset, test on Kalantari’s dataset</th>
+                          </tr>
+                          <tr>
+                            <th class="section-border">Method</th>
+                            <th class="section-border">Metrics</th>
+                            <th>PSNR-μ (↑)</th>
+                            <th>PSNR-L (↑)</th>
+                            <th>SSIM-μ (↑)</th>
+                            <th>SSIM-L (↑)</th>
+                            <th>PSNR-μ (↑)</th>
+                            <th>PSNR-L (↑)</th>
+                            <th>SSIM-μ (↑)</th>
+                            <th>SSIM-L (↑)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td colspan="2" class="section-border">AHDRNet (CVPR 2019)</td>
+                            <td>33.96</td>
+                            <td>32.46</td>
+                            <td>0.9601</td>
+                            <td>0.9542</td>
+                            <td>40.03</td>
+                            <td>36.71</td>
+                            <td>0.9855</td>
+                            <td>0.9758</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="section-border">HDR-Trans (ECCV 2022)</td>
+                            <td>34.07</td>
+                            <td>36.62</td>
+                            <td>0.9675</td>
+                            <td>0.9656</td>
+                            <td class="secondbest">41.38</td>
+                            <td class="secondbest">39.21</td>
+                            <td>0.9890</td>
+                            <td class="best">0.9873</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="section-border">DomainPlus (MM 2022)</td>
+                            <td>32.64</td>
+                            <td>30.42</td>
+                            <td>0.9046</td>
+                            <td>0.9074</td>
+                            <td>41.15</td>
+                            <td>38.18</td>
+                            <td>0.9873</td>
+                            <td>0.9837</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="section-border">SCTNet (ICCV 2023)</td>
+                            <td>33.83</td>
+                            <td>30.95</td>
+                            <td>0.9584</td>
+                            <td>0.9521</td>
+                            <td>40.88</td>
+                            <td>37.59</td>
+                            <td>0.9892</td>
+                            <td>0.9842</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="section-border">SAFNet (ECCV 2024)</td>
+                            <td class="secondbest">38.00</td>
+                            <td class="secondbest">34.65</td>
+                            <td>0.9597</td>
+                            <td class="secondbest">0.9793</td>
+                            <td>40.86</td>
+                            <td>37.50</td>
+                            <td>0.9882</td>
+                            <td>0.9810</td>
+                          </tr>
+                          <tr style="background-color:#FFEEED;">
+                            <td colspan="2" class="section-border">EAFNet (Ours)</td>
+                            <td class="best">39.26</td>
+                            <td class="best">35.99</td>
+                            <td class="best">0.9707</td>
+                            <td class="best">0.9848</td>
+                            <td class="best">42.02</td>
+                            <td class="best">39.38</td>
+                            <td class="best">0.9903</td>
+                            <td class="secondbest">0.9870</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <figcaption style="text-align: center; width: 140%;">
+                      Table2: Cross-dataset evaluation on Kalantari’s dataset and Prabhakar’s dataset. Best results are <span class="best">bold red</span>, second-best are <span class="secondbest">underlined blue</span>.
+                    </figcaption>
+                  </div>
+                
+
+        </div>
+        </div>
+
+        <div id='Paradigm' class="connector-block">
+
+            <h1 class="text">dual-stream HDR video generation paradigm</h1>
+            <p class="text">
+                
+                We introduce a dual-stream HDR video generation paradigm that explicitly decouples temporal luminance anchoring from exposure-variant detail reconstruction. Our approach employs a fixed-exposure stream to maintain temporal alignment across frames, while a complementary stream with varying exposures enhances the dynamic range. This design fundamentally improves temporal consistency and reconstruction stability.
+            </p>
+            <d-figure id="introduction3">
+                <figure>
+                    <img data-zoomable="" draggable="false" src="static/img/introduction3.png" alt="Spatial Vision Aggregator (SVA)">
+                    <figcaption>
+                        <strong>Figure 1:</strong> Overview of challenges in the alternating exposure (AE) paradigm and our proposed dual-stream paradigm for stable HDR video generation.
+                    </figcaption>
+                </figure>
+            </d-figure>
+        </div>
+
+        <div id="System" class="data-block">
+            <h1 class="text">dual-camera system</h1>
+            <p class="text">
+                We design and implement an asynchronous dual-camera system to validate the feasibility of our proposed solution and bridge the gap between algorithmic design and practical deployment. 
+                Unlike traditional synchronized setups constrained by long-exposure frames, our system enables high-frame-rate video capture in dynamic scenes by supporting independent exposure control without requiring hardware-level synchronization. 
+                Moreover, the system seamlessly integrates with existing image deghosting methods to achieve temporally consistent reconstruction.
+
+            </p>
+
+            <div class="subsection">
+                <p class="text" id="data_collection">
+                    <strong>Video Capture and System Design: </strong>
+                    Our dual-camera system uses two identical cameras with resolution \(w \times h\). One camera records a medium-exposure reference sequence \(L_{ref}(t_1)\), 
+                    while the other alternates between low and high exposures \(L_{non\mbox{-}ref}(t_2)\) for dynamic range expansion.
+                    We pair the low/high exposure frames with nearby reference frames using timestamp metadata.The input groups are then processed by the network to reconstruct HDR video at the same frame rate as \(L_{ref}(t_1)\).
+                </p>
+                <d-figure id="fig-cambrian7m" style="text-align: center;">
+                    <figure>
+                        <img data-zoomable="" draggable="false" src="static/img/dual_system.png" alt="Cambrian-7M: A Large-Scale Curated Instruction Tuning Dataset for Training MLLM" style="width: 500px; height: auto;">
+                        <figcaption>
+                            <strong>Figure 2:</strong> Visualization of our dual-camera system. The primary camera captures continuous medium-exposure sequences as reference for temporal consistency, while the secondary camera alternates between low- and high-exposure to provide complementary information for reconstruction.
+                        </figcaption>
+                    </figure>
+                </d-figure>
+
+
+
+                <p class="text">
+                    <strong>dataset</strong>
+                    to do 
+                </p>
+ 
+            </div>
+
+    
+
+            <div id='Method' class="connector-block">
+
+                <h1 class="text">Our exposure-adaptive fusion network</h1>
+                <p class="text">
+                       
+                </p>
+                <d-figure id="model1">
+                    <figure>
+                        <img data-zoomable="" draggable="false" src="static/img/model1.png" alt="Spatial Vision Aggregator (SVA)">
+                        <figcaption>
+                            <strong>Figure 3:</strong> The architecture of EAFNet consists of a pre-alignment subnetwork, an asymmetric cross-feature fusion subnetwork, and a restoration subnetwork. We introduce GLA and EFSM to leverage exposure information, explore the intrinsic properties of the images, and help preserve finer details across varying exposures. The asymmetric cross-feature fusion subnetwork improves image fusion by aligning cross-scale features and performing cross-feature fusion. The reconstruction subnetwork adopts a multi-scale architecture to reduce ghosting and refine features at different resolutions.
+                        </figcaption>
+                    </figure>
+                </d-figure>
+            </div>
+
+
+
+
+
+        <div id="conclusion" style="position: relative; margin-top: 40px; margin-bottom: 0px;">
+            <h2 class="text" style="margin-top:0px; margin-bottom:10px">Conclusion</h2>
+            <p class="text">
+                In this work, we revisited the fundamental cause of temporal instability in alternating-exposure (AE) HDR video, 
+                which lies in the entanglement of temporal luminance anchoring with exposure-dependent detail selection, 
+                and proposed a dual-stream paradigm that explicitly decouples these two roles. Extensive experiments on multiple datasets and real-world sequences demonstrate that the proposed paradigm improves both temporal stability and reconstruction quality compared with AE-based baselines, while remaining cost-efficient and deployment-friendly.
+                Our dual-camera framework provides a promising direction for real-time HDR video capture.
+            </p>
+        </div>
+
+
+        </d-article>
+        <d-appendix>
+            <h3>BibTeX</h3>
+            <p class="bibtex">
+                @article{zhang2025capturing,<br>
+                &nbsp;&nbsp;title={Capturing Stable HDR Videos Using a Dual-Camera System},<br>
+                &nbsp;&nbsp;author={Zhang, Qianyu and Zheng, Bolun and Pan, Hangjia and Zhu, Lingyu and Zhu, Zunjie and Li, Zongpeng and Wang, Shiqi},<br>
+                &nbsp;&nbsp;journal={arXiv preprint arXiv:2507.06593},<br>
+                &nbsp;&nbsp;year={2025}<br>
+                }
+            </p>
+
+            <d-footnote-list></d-footnote-list>
+            <d-citation-list></d-citation-list>
+        </d-appendix>
+        <!-- bibliography will be inlined during Distill pipeline's pre-rendering -->
+        <d-bibliography src="bibliography.bib"></d-bibliography>
+        <script src="./static/js/nav-bar.js"></script>
+    </body>
+</html>
