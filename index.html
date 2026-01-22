@@ -209,273 +209,410 @@
 
 
 
-              <style>
-                /* 视频容器布局 */
-                .video-grid {
-                    display: flex;
-                    flex-wrap: wrap;
-                    justify-content: center;
-                    gap: 10px; /* 视频之间的间距 */
-                    margin-top: 20px;
-                    max-width: 1000px; /* 限制最大宽度，防止太宽 */
-                    margin-left: auto;
-                    margin-right: auto;
-                }
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+        <style>
+            /* --- 全局基础样式 --- */
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                color: #333;
+                margin: 0; 
+                padding: 0;
+                /* 允许横向撑满，但防止出现滚动条 */
+                overflow-x: hidden; 
+            }
+        
+            .sub-section {
+                margin-bottom: 80px;
+                opacity: 0; 
+                animation: fadeIn 1s ease-out forwards;
+                padding: 0 10px;
+            }
+        
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        
+            .text {
+                text-align: center;
+                max-width: 900px;
+                margin: 0 auto 20px auto;
+                line-height: 1.6;
+                color: #555;
+                font-size: 1.1rem;
+            }
             
-                /* --- 新增：范式标题样式 --- */
-                .paradigm-title {
-                    width: 100%;        /* 强制独占一行 */
-                    text-align: center; /* 文字居中 */
-                    font-size: 18px;    /* 字体大小 */
-                    font-weight: bold;  /* 加粗 */
-                    margin-top: 15px;   /* 上方留白 */
-                    margin-bottom: 5px; /* 下方留白 */
-                    color: #333;        /* 字体颜色 */
-                    background-color: #f9f9f9; /* 稍微加点背景色区分一下（可选） */
-                    padding: 5px 0;
-                    border-radius: 4px;
-                }
+            h1.text {
+                font-size: 2.5rem;
+                color: #111;
+                margin-bottom: 15px;
+                font-weight: 700;
+                letter-spacing: -0.5px;
+            }
+        
+            /* --- 视频大容器 (关键修改：超级宽) --- */
+/* --- 视频大容器 (关键修改：强制撑满屏幕) --- */
+            .video-container-card {
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+                padding: 30px 20px; /* 上下30px，左右20px */
+                
+                /* === 核心修改开始 === */
+                
+                /* 1. 宽度设为视口(屏幕)宽度的 95% */
+                width: 95vw; 
+                
+                /* 2. 忽略父容器限制，强制居中 */
+                position: relative;
+                left: 50%;
+                right: 50%;
+                margin-left: -47.5vw; /* 宽度的一半 (95/2) */
+                margin-right: -47.5vw;
+                
+                /* 3. 限制最大宽度，防止在超宽带鱼屏上太夸张 */
+                max-width: 1920px; 
+                
+                /* === 核心修改结束 === */
+                
+                box-sizing: border-box; 
+            }
+        
+            /* 视频网格布局 */
+           /* 视频网格布局 */
+           .video-grid {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px; /* 间隙调小 */
+                width: 100%; /* 确保撑满卡片 */
+            }
+
+            /* 每一行的容器 */
+            .row-container {
+                display: flex;
+                justify-content: center; 
+                gap: 10px; /* 间隙调小 */
+                width: 100%;
+            }
+        
+            /* === 布局核心 === */
             
-                /* 第一行：2个视频，每个占 48% (留点缝隙) */
-                .row-top {
-                    width: 48%; 
-                }
-            
-                /* 第二行：3个视频，每个占 32% */
-                .row-bottom {
-                    width: 32%;
-                }
-            
-                /* 视频标签通用样式 */
-                video {
-                    width: 100%;
-                    border-radius: 5px; /* 圆角 */
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 阴影 */
-                }
-            
-                /* 方法名称标签 */
-                .method-label {
-                    text-align: center;
-                    font-weight: bold;
-                    margin-bottom: 5px;
-                    font-family: sans-serif;
-                }
-            
-                /* 按钮组样式 */
-                .scene-selector {
-                    text-align: center;
-                    margin: 20px 0;
-                }
-                .scene-btn {
-                    padding: 8px 16px;
-                    margin: 0 5px;
-                    cursor: pointer;
-                    background-color: #f0f0f0;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size: 14px;
-                }
-                .scene-btn:hover, .scene-btn.active {
-                    background-color: #007bff;
-                    color: white;
-                    border-color: #007bff;
-                }
-            </style>
-            
-            <div class="sub-section">
-                <h1 class="text">Video Comparisons</h1>
-                <p class="text">
-                    In this section, we focus on dynamic HDR image fusion...
-                </p>
-            
-                <div class="scene-selector">
-                    <button class="scene-btn active" onclick="changeScene(1)">Scene 01</button>
-                    <button class="scene-btn" onclick="changeScene(2)">Scene 02</button>
-                    <button class="scene-btn" onclick="changeScene(3)">Scene 03</button>
-                    <button class="scene-btn" onclick="changeScene(4)">Scene 04</button>
-                    <button class="scene-btn" onclick="changeScene(5)">Scene 05</button>
-                    <button class="scene-btn" onclick="changeScene(6)">Scene 06</button>
-                    <button class="scene-btn" onclick="changeScene(7)">Scene 07</button>
-                    <button class="scene-btn" onclick="changeScene(8)">Scene 08</button>
-                    <button class="scene-btn" onclick="changeScene(9)">Scene 09</button>
-                    <button class="scene-btn" onclick="changeScene(10)">Scene 10</button>
-                </div>
-            
-                <div class="video-grid">
+            /* 上面一行：2个视频 (每个约占 49%) */
+            .row-top { 
+                width: 49%; 
+                min-width: 300px;
+            }
+        
+            /* 下面一行：3个视频 (每个约占 32.5%) */
+            /* 100% / 3 = 33.3%，减去间隙保留 32.5% */
+            .row-bottom { 
+                width: 32.5%; 
+                min-width: 200px;
+            }
+        
+            /* 视频标签通用样式 */
+            video {
+                width: 100%;
+                display: block;
+                border-radius: 6px;
+                background: #000; 
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+        
+            video:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            }
+        
+            /* --- 范式标题 --- */
+            .paradigm-title {
+                width: 100%;
+                text-align: center;
+                font-size: 15px;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                font-weight: 700;
+                color: #007bff;
+                background: rgba(0, 123, 255, 0.05);
+                padding: 8px 0;
+                margin: 15px 0 10px 0;
+                border-radius: 4px;
+            }
+        
+            .method-label {
+                text-align: center;
+                font-size: 15px;
+                font-weight: 600;
+                margin-bottom: 6px;
+                color: #444;
+            }
+        
+            /* --- 按钮组美化 --- */
+            .scene-selector {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                margin-bottom: 30px;
+            }
+        
+            .scene-btn {
+                padding: 8px 20px;
+                border: none;
+                background-color: #f0f2f5;
+                color: #555;
+                font-size: 14px;
+                font-weight: 600;
+                border-radius: 50px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+        
+            .scene-btn:hover {
+                background-color: #e4e6eb;
+                transform: translateY(-1px);
+            }
+        
+            .scene-btn.active {
+                background-color: #007bff;
+                color: white;
+                box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+                transform: scale(1.05);
+            }
+        
+            /* 动画类 */
+            .fade-in-anim {
+                animation: quickFade 0.5s ease forwards;
+            }
+            @keyframes quickFade {
+                from { opacity: 0.5; filter: blur(2px); }
+                to { opacity: 1; filter: blur(0); }
+            }
+        </style>
+        
+        <div class="sub-section">
+            <h1 class="text">Quantitative Comparisons</h1>
+            <p class="text">
+                Comparison with state-of-the-art methods. 
+                <br><span style="font-size: 0.9em; color: #888;">Play, pause, or drag the progress bar on <em>any</em> video to control them all simultaneously!</span>
+            </p>
+        
+            <div class="scene-selector" id="btn-group-1">
+                <button class="scene-btn active" onclick="changeScene(1)">Scene 01</button>
+                <button class="scene-btn" onclick="changeScene(2)">Scene 02</button>
+                <button class="scene-btn" onclick="changeScene(3)">Scene 03</button>
+                <button class="scene-btn" onclick="changeScene(4)">Scene 04</button>
+                <button class="scene-btn" onclick="changeScene(5)">Scene 05</button>
+                <button class="scene-btn" onclick="changeScene(6)">Scene 06</button>
+                <button class="scene-btn" onclick="changeScene(7)">Scene 07</button>
+                <button class="scene-btn" onclick="changeScene(8)">Scene 08</button>
+                <button class="scene-btn" onclick="changeScene(9)">Scene 09</button>
+                <button class="scene-btn" onclick="changeScene(10)">Scene 10</button>
+            </div>
+        
+            <div class="video-container-card">
+                <div class="video-grid" id="video-group-1">
                     
                     <div class="paradigm-title">Existing AE paradigm</div>
-            
+        
                     <div class="row-top">
                         <div class="method-label">HDRFlow</div>
-                        <video id="vid_hdrflow" autoplay loop muted playsinline>
+                        <video class="sync-group-1" id="vid_hdrflow" autoplay loop muted playsinline controls>
                             <source src="demo/out01/output01_HDRFlow.mp4" type="video/mp4">
                         </video>
                     </div>
-            
+        
                     <div class="row-top">
                         <div class="method-label">LANHDR</div>
-                        <video id="vid_lanhdr" autoplay loop muted playsinline>
+                        <video class="sync-group-1" id="vid_lanhdr" autoplay loop muted playsinline controls>
                             <source src="demo/out01/output01_LANHDR.mp4" type="video/mp4">
                         </video>
                     </div>
-            
+        
                     <div class="paradigm-title">Our DS paradigm</div>
-            
+        
                     <div class="row-bottom">
                         <div class="method-label">AHDNet</div>
-                        <video id="vid_ahdnet" autoplay loop muted playsinline>
+                        <video class="sync-group-1" id="vid_ahdnet" autoplay loop muted playsinline controls>
                             <source src="demo/out01/output01_AHDNet.mp4" type="video/mp4">
                         </video>
                     </div>
-            
+        
                     <div class="row-bottom">
                         <div class="method-label">SCTNet</div>
-                        <video id="vid_sctnet" autoplay loop muted playsinline>
+                        <video class="sync-group-1" id="vid_sctnet" autoplay loop muted playsinline controls>
                             <source src="demo/out01/output01_SCTNet.mp4" type="video/mp4">
                         </video>
                     </div>
-            
+        
                     <div class="row-bottom">
-                        <div class="method-label">EAFNet (Ours)</div>
-                        <video id="vid_pami" autoplay loop muted playsinline>
+                        <div class="method-label" style="color: #d63031;">EAFNet (Ours)</div>
+                        <video class="sync-group-1" id="vid_pami" autoplay loop muted playsinline controls>
                             <source src="demo/out01/output01_pami.mp4" type="video/mp4">
                         </video>
                     </div>
-            
+        
                 </div>
             </div>
-            
-            <script>
-                function changeScene(sceneNum) {
-                    // 1. 处理数字格式
-                    var sceneStr = sceneNum.toString().padStart(2, '0');
+        </div>
+        
+        
+        <div class="sub-section" style="margin-top: 80px;">
+            <h1 class="text">Real-world Comparisons</h1>
+            <p class="text">
+                Qualitative comparisons on real-world dynamic scenes.
+            </p>
+        
+            <div class="scene-selector" id="btn-group-2">
+                <button class="scene-btn real-btn active" onclick="changeRealScene(1)">Scene 01</button>
+                <button class="scene-btn real-btn" onclick="changeRealScene(2)">Scene 02</button>
+                <button class="scene-btn real-btn" onclick="changeRealScene(3)">Scene 03</button>
+                <button class="scene-btn real-btn" onclick="changeRealScene(4)">Scene 04</button>
+                <button class="scene-btn real-btn" onclick="changeRealScene(5)">Scene 05</button>
+            </div>
+        
+            <div class="video-container-card">
+                <div class="video-grid" id="video-group-2">
                     
-                    // 2. 路径配置
-                    var folderPath = "demo/out" + sceneStr + "/";
-                    var filePrefix = "output" + sceneStr + "_"; 
-                    
-                    // *特殊情况修正*：如果你的文件名全是 output02_xxx.mp4 这种固定名字，
-                    // 请把上面那行改成: var filePrefix = "output02_"; 
-            
-                    // 3. 获取所有 video 标签
-                    var v_hdrflow = document.getElementById('vid_hdrflow');
-                    var v_lanhdr = document.getElementById('vid_lanhdr');
-                    var v_ahdnet = document.getElementById('vid_ahdnet');
-                    var v_sctnet = document.getElementById('vid_sctnet');
-                    var v_pami = document.getElementById('vid_pami');                   
-            
-                    // 4. 更新 src 并重新加载
-                    v_hdrflow.src = folderPath + filePrefix + "HDRFlow.mp4";
-                    v_lanhdr.src  = folderPath + filePrefix + "LANHDR.mp4";
-                    v_ahdnet.src  = folderPath + filePrefix + "AHDNet.mp4";
-                    v_sctnet.src  = folderPath + filePrefix + "SCTNet.mp4";
-                    v_pami.src    = folderPath + filePrefix + "pami.mp4";
-            
-                    // 重新播放
-                    var videos = [v_hdrflow, v_lanhdr, v_ahdnet, v_pami, v_sctnet];
-                    videos.forEach(v => {
-                        v.load();
-                        v.play();
-                    });
-            
-                    // 5. 更新按钮样式
-                    var buttons = document.querySelectorAll('.scene-btn');
-                    buttons.forEach((btn, index) => {
-                        if (index + 1 === sceneNum) {
-                            btn.classList.add('active');
-                        } else {
-                            btn.classList.remove('active');
+                    <div class="row-top">
+                        <div class="method-label" id="real_label_left">GT</div>
+                        <video class="sync-group-2" id="vid_real_input" autoplay loop muted playsinline controls>
+                            <source src="demo/real01/in01_pami2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+        
+                    <div class="row-top">
+                        <div class="method-label" style="color: #d63031;">Our Result</div>
+                        <video class="sync-group-2" id="vid_real_output" autoplay loop muted playsinline controls>
+                            <source src="demo/real01/out01_pami2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+        
+        
+        <script>
+            // 1. 视频同步播放逻辑
+            function setupSynchronizedPlayback(className) {
+                const videos = document.querySelectorAll('.' + className);
+                let isSyncing = false;
+        
+                videos.forEach(video => {
+                    video.addEventListener('play', () => {
+                        if (!isSyncing) {
+                            isSyncing = true;
+                            videos.forEach(v => { if (v !== video) v.play(); });
+                            isSyncing = false;
                         }
                     });
-                }
-            </script>
+                    video.addEventListener('pause', () => {
+                        if (!isSyncing) {
+                            isSyncing = true;
+                            videos.forEach(v => { if (v !== video) v.pause(); });
+                            isSyncing = false;
+                        }
+                    });
+                    video.addEventListener('seeking', () => {
+                        if (!isSyncing) {
+                            isSyncing = true;
+                            videos.forEach(v => { 
+                                if (v !== video && Math.abs(v.currentTime - video.currentTime) > 0.1) {
+                                    v.currentTime = video.currentTime; 
+                                }
+                            });
+                            isSyncing = false;
+                        }
+                    });
+                });
+            }
+        
+            document.addEventListener('DOMContentLoaded', () => {
+                setupSynchronizedPlayback('sync-group-1');
+                setupSynchronizedPlayback('sync-group-2');
+            });
+        
+            // 2. 场景切换逻辑 (第一组)
+            function changeScene(sceneNum) {
+                updateActiveButton('btn-group-1', sceneNum);
+                
+                var sceneStr = sceneNum.toString().padStart(2, '0');
+                var folderPath = "demo/out" + sceneStr + "/";
+                var filePrefix = "output" + sceneStr + "_"; 
+                
+                var v_hdrflow = document.getElementById('vid_hdrflow');
+                var v_lanhdr = document.getElementById('vid_lanhdr');
+                var v_ahdnet = document.getElementById('vid_ahdnet');
+                var v_sctnet = document.getElementById('vid_sctnet');
+                var v_pami = document.getElementById('vid_pami');
+                
+                v_hdrflow.src = folderPath + filePrefix + "HDRFlow.mp4";
+                v_lanhdr.src  = folderPath + filePrefix + "LANHDR.mp4";
+                v_ahdnet.src  = folderPath + filePrefix + "AHDNet.mp4";
+                v_sctnet.src  = folderPath + filePrefix + "SCTNet.mp4";
+                v_pami.src    = folderPath + filePrefix + "pami.mp4";
+        
+                reloadAndPlay([v_hdrflow, v_lanhdr, v_ahdnet, v_sctnet, v_pami]);
+                triggerAnimation('video-group-1');
+            }
+        
+            // 3. 场景切换逻辑 (第二组 Real)
+            function changeRealScene(sceneNum) {
+                updateActiveButton('btn-group-2', sceneNum);
+        
+                var labelLeft = document.getElementById('real_label_left');
+                labelLeft.innerText = (sceneNum === 1) ? "GT" : "Input (Reference)";
+        
+                var sceneStr = sceneNum.toString().padStart(2, '0');
+                var folderPath = "demo/real" + sceneStr + "/";
+                var inputFile  = "in" + sceneStr + "_pami2.mp4";
+                var outputFile = "out" + sceneStr + "_pami2.mp4";
+        
+                var v_in = document.getElementById('vid_real_input');
+                var v_out = document.getElementById('vid_real_output');
+        
+                v_in.src  = folderPath + inputFile;
+                v_out.src = folderPath + outputFile;
+        
+                reloadAndPlay([v_in, v_out]);
+                triggerAnimation('video-group-2');
+            }
+        
+            // --- 辅助函数 ---
+            function reloadAndPlay(videoElements) {
+                videoElements.forEach(v => {
+                    v.load();
+                    var playPromise = v.play();
+                    if (playPromise !== undefined) { playPromise.catch(error => {}); }
+                });
+            }
+        
+            function updateActiveButton(parentId, index) {
+                var container = document.getElementById(parentId);
+                var buttons = container.querySelectorAll('.scene-btn');
+                buttons.forEach((btn, i) => {
+                    if (i + 1 === index) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+        
+            function triggerAnimation(elementId) {
+                var el = document.getElementById(elementId);
+                el.classList.remove('fade-in-anim');
+                void el.offsetWidth; 
+                el.classList.add('fade-in-anim');
+            }
+        </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="sub-section" style="margin-top: 60px;">
-  <h1 class="text">Real-world Comparisons</h1>
-  <p class="text">
-      Qualitative comparisons on real-world dynamic scenes.
-  </p>
-
-  <div class="scene-selector">
-      <button class="scene-btn real-btn active" onclick="changeRealScene(1)">Scene 01</button>
-      <button class="scene-btn real-btn" onclick="changeRealScene(2)">Scene 02</button>
-      <button class="scene-btn real-btn" onclick="changeRealScene(3)">Scene 03</button>
-      <button class="scene-btn real-btn" onclick="changeRealScene(4)">Scene 04</button>
-      <button class="scene-btn real-btn" onclick="changeRealScene(5)">Scene 05</button>
-  </div>
-
-  <div class="video-grid">
-      
-      <div class="row-top">
-          <div class="method-label">Input (Reference)</div>
-          <video id="vid_real_input" autoplay loop muted playsinline>
-              <source src="demo/real01/in01_pami2.mp4" type="video/mp4">
-          </video>
-      </div>
-
-      <div class="row-top">
-          <div class="method-label">Our Result</div>
-          <video id="vid_real_output" autoplay loop muted playsinline>
-              <source src="demo/real01/out01_pami2.mp4" type="video/mp4">
-          </video>
-      </div>
-
-  </div>
-</div>
-
-<script>
-  function changeRealScene(sceneNum) {
-      // 1. 格式化数字 (1 -> "01")
-      var sceneStr = sceneNum.toString().padStart(2, '0');
-
-      // 2. 定义路径
-      // 假设结构是: demo/real01/in01_pami2.mp4
-      var folderPath = "demo/real" + sceneStr + "/";
-      
-      // 这里的逻辑是：in + 数字 + _pami2.mp4
-      // 如果你的文件名里的数字是死的（比如不管文件夹几，文件名都是 in01_pami2），请把 sceneStr 改成 "01"
-      var inputFile  = "in" + sceneStr + "_pami2.mp4";
-      var outputFile = "out" + sceneStr + "_pami2.mp4";
-
-      // 3. 获取视频元素
-      var v_in = document.getElementById('vid_real_input');
-      var v_out = document.getElementById('vid_real_output');
-
-      // 4. 切换源
-      v_in.src  = folderPath + inputFile;
-      v_out.src = folderPath + outputFile;
-
-      // 5. 重载播放
-      v_in.load(); v_in.play();
-      v_out.load(); v_out.play();
-
-      // 6. 更新按钮高亮 (只针对 real-btn 类)
-      var buttons = document.querySelectorAll('.real-btn');
-      buttons.forEach((btn, index) => {
-          if (index + 1 === sceneNum) {
-              btn.classList.add('active');
-          } else {
-              btn.classList.remove('active');
-          }
-      });
-  }
-</script>
 
 
 
