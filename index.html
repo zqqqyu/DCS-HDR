@@ -197,33 +197,298 @@
 
         <hr>
 
-        <div id='Results' class="vision-block">
 
-            <div id="sec:benchmarking" class="sub-section">
-                <h1 class="text">Video Comparisons</h1>
 
-  
-                <p class="text">
-                    <strong>to do </strong>
+
+        
 
 
 
 
-            </div>
-            <div id="cv-bench" class="sub-section">
 
 
-            <div id="sec:benchmarking" class="sub-section">
-                <h1 class="text">Quantitative Comparisons</h1>
-                    <p class="text">
-                        In this sectioin, we focus on dynamic HDR image fusion, presenting both quantitative and qualitative comparisons with state-of-the-art HDR image deghosting methods to validate the effectiveness of our method in single-frame spatial fusion and deghosting.
-                    </p>
 
 
-            </div>
-            <div id="sec:inst_tuning" class="sub-section">
-
+              <style>
+                /* 视频容器布局 */
+                .video-grid {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 10px; /* 视频之间的间距 */
+                    margin-top: 20px;
+                    max-width: 1000px; /* 限制最大宽度，防止太宽 */
+                    margin-left: auto;
+                    margin-right: auto;
+                }
             
+                /* --- 新增：范式标题样式 --- */
+                .paradigm-title {
+                    width: 100%;        /* 强制独占一行 */
+                    text-align: center; /* 文字居中 */
+                    font-size: 18px;    /* 字体大小 */
+                    font-weight: bold;  /* 加粗 */
+                    margin-top: 15px;   /* 上方留白 */
+                    margin-bottom: 5px; /* 下方留白 */
+                    color: #333;        /* 字体颜色 */
+                    background-color: #f9f9f9; /* 稍微加点背景色区分一下（可选） */
+                    padding: 5px 0;
+                    border-radius: 4px;
+                }
+            
+                /* 第一行：2个视频，每个占 48% (留点缝隙) */
+                .row-top {
+                    width: 48%; 
+                }
+            
+                /* 第二行：3个视频，每个占 32% */
+                .row-bottom {
+                    width: 32%;
+                }
+            
+                /* 视频标签通用样式 */
+                video {
+                    width: 100%;
+                    border-radius: 5px; /* 圆角 */
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 阴影 */
+                }
+            
+                /* 方法名称标签 */
+                .method-label {
+                    text-align: center;
+                    font-weight: bold;
+                    margin-bottom: 5px;
+                    font-family: sans-serif;
+                }
+            
+                /* 按钮组样式 */
+                .scene-selector {
+                    text-align: center;
+                    margin: 20px 0;
+                }
+                .scene-btn {
+                    padding: 8px 16px;
+                    margin: 0 5px;
+                    cursor: pointer;
+                    background-color: #f0f0f0;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 14px;
+                }
+                .scene-btn:hover, .scene-btn.active {
+                    background-color: #007bff;
+                    color: white;
+                    border-color: #007bff;
+                }
+            </style>
+            
+            <div class="sub-section">
+                <h1 class="text">Video Comparisons</h1>
+                <p class="text">
+                    In this section, we focus on dynamic HDR image fusion...
+                </p>
+            
+                <div class="scene-selector">
+                    <button class="scene-btn active" onclick="changeScene(1)">Scene 01</button>
+                    <button class="scene-btn" onclick="changeScene(2)">Scene 02</button>
+                    <button class="scene-btn" onclick="changeScene(3)">Scene 03</button>
+                    <button class="scene-btn" onclick="changeScene(4)">Scene 04</button>
+                    <button class="scene-btn" onclick="changeScene(5)">Scene 05</button>
+                    <button class="scene-btn" onclick="changeScene(6)">Scene 06</button>
+                    <button class="scene-btn" onclick="changeScene(7)">Scene 07</button>
+                    <button class="scene-btn" onclick="changeScene(8)">Scene 08</button>
+                    <button class="scene-btn" onclick="changeScene(9)">Scene 09</button>
+                    <button class="scene-btn" onclick="changeScene(10)">Scene 10</button>
+                </div>
+            
+                <div class="video-grid">
+                    
+                    <div class="paradigm-title">Existing AE paradigm</div>
+            
+                    <div class="row-top">
+                        <div class="method-label">HDRFlow</div>
+                        <video id="vid_hdrflow" autoplay loop muted playsinline>
+                            <source src="demo/out01/output01_HDRFlow.mp4" type="video/mp4">
+                        </video>
+                    </div>
+            
+                    <div class="row-top">
+                        <div class="method-label">LANHDR</div>
+                        <video id="vid_lanhdr" autoplay loop muted playsinline>
+                            <source src="demo/out01/output01_LANHDR.mp4" type="video/mp4">
+                        </video>
+                    </div>
+            
+                    <div class="paradigm-title">Our DS paradigm</div>
+            
+                    <div class="row-bottom">
+                        <div class="method-label">AHDNet</div>
+                        <video id="vid_ahdnet" autoplay loop muted playsinline>
+                            <source src="demo/out01/output01_AHDNet.mp4" type="video/mp4">
+                        </video>
+                    </div>
+            
+                    <div class="row-bottom">
+                        <div class="method-label">SCTNet</div>
+                        <video id="vid_sctnet" autoplay loop muted playsinline>
+                            <source src="demo/out01/output01_SCTNet.mp4" type="video/mp4">
+                        </video>
+                    </div>
+            
+                    <div class="row-bottom">
+                        <div class="method-label">EAFNet (Ours)</div>
+                        <video id="vid_pami" autoplay loop muted playsinline>
+                            <source src="demo/out01/output01_pami.mp4" type="video/mp4">
+                        </video>
+                    </div>
+            
+                </div>
+            </div>
+            
+            <script>
+                function changeScene(sceneNum) {
+                    // 1. 处理数字格式
+                    var sceneStr = sceneNum.toString().padStart(2, '0');
+                    
+                    // 2. 路径配置
+                    var folderPath = "demo/out" + sceneStr + "/";
+                    var filePrefix = "output" + sceneStr + "_"; 
+                    
+                    // *特殊情况修正*：如果你的文件名全是 output02_xxx.mp4 这种固定名字，
+                    // 请把上面那行改成: var filePrefix = "output02_"; 
+            
+                    // 3. 获取所有 video 标签
+                    var v_hdrflow = document.getElementById('vid_hdrflow');
+                    var v_lanhdr = document.getElementById('vid_lanhdr');
+                    var v_ahdnet = document.getElementById('vid_ahdnet');
+                    var v_sctnet = document.getElementById('vid_sctnet');
+                    var v_pami = document.getElementById('vid_pami');                   
+            
+                    // 4. 更新 src 并重新加载
+                    v_hdrflow.src = folderPath + filePrefix + "HDRFlow.mp4";
+                    v_lanhdr.src  = folderPath + filePrefix + "LANHDR.mp4";
+                    v_ahdnet.src  = folderPath + filePrefix + "AHDNet.mp4";
+                    v_sctnet.src  = folderPath + filePrefix + "SCTNet.mp4";
+                    v_pami.src    = folderPath + filePrefix + "pami.mp4";
+            
+                    // 重新播放
+                    var videos = [v_hdrflow, v_lanhdr, v_ahdnet, v_pami, v_sctnet];
+                    videos.forEach(v => {
+                        v.load();
+                        v.play();
+                    });
+            
+                    // 5. 更新按钮样式
+                    var buttons = document.querySelectorAll('.scene-btn');
+                    buttons.forEach((btn, index) => {
+                        if (index + 1 === sceneNum) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+                }
+            </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="sub-section" style="margin-top: 60px;">
+  <h1 class="text">Real-world Comparisons</h1>
+  <p class="text">
+      Qualitative comparisons on real-world dynamic scenes.
+  </p>
+
+  <div class="scene-selector">
+      <button class="scene-btn real-btn active" onclick="changeRealScene(1)">Scene 01</button>
+      <button class="scene-btn real-btn" onclick="changeRealScene(2)">Scene 02</button>
+      <button class="scene-btn real-btn" onclick="changeRealScene(3)">Scene 03</button>
+      <button class="scene-btn real-btn" onclick="changeRealScene(4)">Scene 04</button>
+      <button class="scene-btn real-btn" onclick="changeRealScene(5)">Scene 05</button>
+  </div>
+
+  <div class="video-grid">
+      
+      <div class="row-top">
+          <div class="method-label">Input (Reference)</div>
+          <video id="vid_real_input" autoplay loop muted playsinline>
+              <source src="demo/real01/in01_pami2.mp4" type="video/mp4">
+          </video>
+      </div>
+
+      <div class="row-top">
+          <div class="method-label">Our Result</div>
+          <video id="vid_real_output" autoplay loop muted playsinline>
+              <source src="demo/real01/out01_pami2.mp4" type="video/mp4">
+          </video>
+      </div>
+
+  </div>
+</div>
+
+<script>
+  function changeRealScene(sceneNum) {
+      // 1. 格式化数字 (1 -> "01")
+      var sceneStr = sceneNum.toString().padStart(2, '0');
+
+      // 2. 定义路径
+      // 假设结构是: demo/real01/in01_pami2.mp4
+      var folderPath = "demo/real" + sceneStr + "/";
+      
+      // 这里的逻辑是：in + 数字 + _pami2.mp4
+      // 如果你的文件名里的数字是死的（比如不管文件夹几，文件名都是 in01_pami2），请把 sceneStr 改成 "01"
+      var inputFile  = "in" + sceneStr + "_pami2.mp4";
+      var outputFile = "out" + sceneStr + "_pami2.mp4";
+
+      // 3. 获取视频元素
+      var v_in = document.getElementById('vid_real_input');
+      var v_out = document.getElementById('vid_real_output');
+
+      // 4. 切换源
+      v_in.src  = folderPath + inputFile;
+      v_out.src = folderPath + outputFile;
+
+      // 5. 重载播放
+      v_in.load(); v_in.play();
+      v_out.load(); v_out.play();
+
+      // 6. 更新按钮高亮 (只针对 real-btn 类)
+      var buttons = document.querySelectorAll('.real-btn');
+      buttons.forEach((btn, index) => {
+          if (index + 1 === sceneNum) {
+              btn.classList.add('active');
+          } else {
+              btn.classList.remove('active');
+          }
+      });
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
            
 
                 <p class="text">
