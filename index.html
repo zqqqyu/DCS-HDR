@@ -213,6 +213,7 @@
 
         <style>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             /* --- 全局基础样式 --- */
             body {
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -354,6 +355,60 @@
                 text-align: center;
             }
             
+=======
+
+
+/* --- 1. 统一的内容容器类 (修正版) --- */
+.common-section {
+                max-width: 1000px; 
+                margin: 0 auto 60px auto; /* 核心：左右自动居中 (auto) */
+                padding: 0 20px;
+                
+                /* === 关键修复 === */
+                /* 确保 padding 不会把容器撑歪，强制让内容以中线为准 */
+                box-sizing: border-box; 
+                width: 100%; 
+            }
+
+            /* --- 2. 强制修复 d-figure 和图片的对齐 (新增) --- */
+            /* Distill 模版里的 d-figure 默认会有奇怪的 Grid 定位，这里强制重置为普通块级元素并居中 */
+            .common-section d-figure, 
+            .common-section figure {
+                display: block !important; /* 覆盖模版默认设定 */
+                margin: 30px auto !important; /* 上下间距，左右强制居中 */
+                width: 100% !important;
+                text-align: center; /* 让图片下方的 caption 文字居中 */
+                grid-column: auto !important; /* 取消 Distill 的网格偏移 */
+            }
+
+            .common-section img {
+                display: block;
+                margin: 0 auto; /* 图片本体强制左右居中 */
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* --- 3. 文本样式 (配合容器) --- */
+            .text {
+                width: 100%;
+                max-width: 100%; 
+                
+                /* 文字两端对齐，视觉上左右边缘会和图片对齐，中线自然也就对齐了 */
+                text-align: justify; 
+                
+                line-height: 1.7;
+                color: #444;
+                font-size: 1.15rem;
+                margin-bottom: 15px;
+                box-sizing: border-box;
+            }
+            
+            /* 标题强制居中 */
+            h1.text, h2.text {
+                text-align: center;
+            }
+            
+>>>>>>> Stashed changes
             /* 视频部分的介绍文字强制居中 */
             .text-center {
                 text-align: center !important;
@@ -455,6 +510,9 @@
             }
         
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             .row-top { 
                 width: 49%; 
@@ -462,8 +520,12 @@
             }
         
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             /* 下面一行：3个视频 (每个约占 32.5%) */
             /* 100% / 3 = 33.3%，减去间隙保留 32.5% */
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -472,8 +534,12 @@
                 min-width: 200px;
             }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         
             /* 视频标签通用样式 */
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -492,7 +558,10 @@
             }
         
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             /* --- 范式标题 --- */
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
             .paradigm-title {
@@ -518,7 +587,10 @@
             }
         
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             /* --- 按钮组美化 --- */
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
             .scene-selector {
@@ -565,9 +637,15 @@
         </style>
         
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <div class="sub-section">
             <h1 class="text">Quantitative Comparisons</h1>
             <p class="text">
+=======
+        <div class="sub-section l-screen">
+            <h1 class="text">Quantitative Comparisons</h1>
+            <p class="text text-center">
+>>>>>>> Stashed changes
 =======
         <div class="sub-section l-screen">
             <h1 class="text">Quantitative Comparisons</h1>
@@ -638,9 +716,15 @@
         
         
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <div class="sub-section" style="margin-top: 80px;">
             <h1 class="text">Real-world Comparisons</h1>
             <p class="text">
+=======
+        <div class="sub-section l-screen">
+            <h1 class="text">Real-world Comparisons</h1>
+            <p class="text text-center">
+>>>>>>> Stashed changes
 =======
         <div class="sub-section l-screen">
             <h1 class="text">Real-world Comparisons</h1>
