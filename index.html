@@ -155,12 +155,12 @@
 
             <br><br>
             our contributions can be summarized as follows:
-            <ol class="text">
-                <li><strong><a href="#Paradigm">&sect;Paradigm</a></strong>: We introduce a dual-stream HDR video generation paradigm that explicitly decouples temporal luminance anchoring from exposure-variant detail reconstruction.</li>
-                <li><strong><a href="#System">&sect;System</a></strong>: We design and implement an asynchronous dual-camera system to validate the feasibility of our proposed solution and bridge the gap between algorithmic design and practical deployment.</li>
-                <li><strong><a href="#Method">&sect;Method</a></strong>: To support our dual-camera system, we propose a novel model design, EAFNet.</li>
-                <li><strong><a href="#Results">&sect;Results</a></strong>: Our proposed dual-stream HDR video generation paradigm demonstrates significant advancements across multiple aspects.</li>
-            </ol>
+            <ol class="contribution-list">
+              <li><strong><a href="#Paradigm">&sect;Paradigm</a></strong>: We introduce a dual-stream HDR video generation paradigm that explicitly decouples temporal luminance anchoring from exposure-variant detail reconstruction.</li>
+              <li><strong><a href="#System">&sect;System</a></strong>: We design and implement an asynchronous dual-camera system to validate the feasibility of our proposed solution and bridge the gap between algorithmic design and practical deployment.</li>
+              <li><strong><a href="#Method">&sect;Method</a></strong>: To support our dual-camera system, we propose a novel model design, EAFNet.</li>
+              <li><strong><a href="#Results">&sect;Results</a></strong>: Our proposed dual-stream HDR video generation paradigm demonstrates significant advancements across multiple aspects.</li>
+          </ol>
         </p>
 
         <div class="icon-row">
@@ -212,6 +212,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
         <style>
+<<<<<<< Updated upstream
             /* --- 全局基础样式 --- */
             body {
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -300,19 +301,182 @@
             /* === 布局核心 === */
             
             /* 上面一行：2个视频 (每个约占 49%) */
+=======
+
+
+/* --- 1. 统一的内容容器类 (修正版) --- */
+.common-section {
+                max-width: 1000px; 
+                margin: 0 auto 60px auto; /* 核心：左右自动居中 (auto) */
+                padding: 0 20px;
+                
+                /* === 关键修复 === */
+                /* 确保 padding 不会把容器撑歪，强制让内容以中线为准 */
+                box-sizing: border-box; 
+                width: 100%; 
+            }
+
+            /* --- 2. 强制修复 d-figure 和图片的对齐 (新增) --- */
+            /* Distill 模版里的 d-figure 默认会有奇怪的 Grid 定位，这里强制重置为普通块级元素并居中 */
+            .common-section d-figure, 
+            .common-section figure {
+                display: block !important; /* 覆盖模版默认设定 */
+                margin: 30px auto !important; /* 上下间距，左右强制居中 */
+                width: 100% !important;
+                text-align: center; /* 让图片下方的 caption 文字居中 */
+                grid-column: auto !important; /* 取消 Distill 的网格偏移 */
+            }
+
+            .common-section img {
+                display: block;
+                margin: 0 auto; /* 图片本体强制左右居中 */
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* --- 3. 文本样式 (配合容器) --- */
+            .text {
+                width: 100%;
+                max-width: 100%; 
+                
+                /* 文字两端对齐，视觉上左右边缘会和图片对齐，中线自然也就对齐了 */
+                text-align: justify; 
+                
+                line-height: 1.7;
+                color: #444;
+                font-size: 1.15rem;
+                margin-bottom: 15px;
+                box-sizing: border-box;
+            }
+            
+            /* 标题强制居中 */
+            h1.text, h2.text {
+                text-align: center;
+            }
+            
+            /* 视频部分的介绍文字强制居中 */
+            .text-center {
+                text-align: center !important;
+            }
+
+            /* --- 4. 贡献列表 --- */
+            .contribution-list {
+                max-width: 100%;
+                margin: 0 auto 20px auto;
+                padding-left: 2rem;
+                font-size: 1.1rem;
+                color: #555;
+                line-height: 1.6;
+                text-align: justify;
+                box-sizing: border-box;
+            }
+
+              /* 让列表项之间有点间距，不那么拥挤 */
+              .contribution-list li {
+                  margin-bottom: 8px;
+              }
+
+
+            /* --- 全局基础样式 --- */
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                color: #333;
+                margin: 0; 
+                padding: 0;
+                /* 允许横向撑满，但防止出现滚动条 */
+                overflow-x: hidden; 
+            }
+        
+            .sub-section {
+                margin-bottom: 80px;
+                opacity: 0; 
+                animation: fadeIn 1s ease-out forwards;
+                padding: 0 10px;
+            }
+        
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        
+          /* --- 修改 .text：默认改为两端对齐，提升阅读体验 --- */
+          .text {
+                          /* 关键修改：从 center 改为 justify */
+                          text-align: justify; 
+                          
+                          max-width: 900px;
+                          margin: 0 auto 20px auto;
+                          line-height: 1.6;
+                          color: #555;
+                          font-size: 1.1rem;
+                      }
+                      
+                      /* --- 保持标题居中 (可选，通常标题居中更好看) --- */
+                      h1.text, h2.text {
+                          text-align: center;
+                      }
+
+                      /* --- 新增：专门用于视频部分的强制居中样式 --- */
+                      .text-center {
+                          text-align: center !important;
+                      }
+                  
+/* --- 视频大容器 (新版：配合 l-screen 使用) --- */
+.video-container-card {
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+                padding: 30px 20px;
+                
+                /* === 核心修改：简化逻辑 === */
+                /* 既然父容器已经是全屏宽了，我们只需要让卡片占 95% 并自动居中即可 */
+                width: 95%; 
+                max-width: 1800px;
+                margin: 0 auto; /* 自动左右居中 */
+                
+                /* === 删除之前那些 left/margin-left 的复杂代码，防止偏左 === */
+                
+                box-sizing: border-box; 
+            }
+        
+           .video-grid {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                width: 100%; 
+            }
+
+            .row-container {
+                display: flex;
+                justify-content: center; 
+                gap: 10px; /* 间隙调小 */
+                width: 100%;
+            }
+        
+
+>>>>>>> Stashed changes
             .row-top { 
                 width: 49%; 
                 min-width: 300px;
             }
         
+<<<<<<< Updated upstream
             /* 下面一行：3个视频 (每个约占 32.5%) */
             /* 100% / 3 = 33.3%，减去间隙保留 32.5% */
+=======
+
+>>>>>>> Stashed changes
             .row-bottom { 
                 width: 32.5%; 
                 min-width: 200px;
             }
+<<<<<<< Updated upstream
         
             /* 视频标签通用样式 */
+=======
+
+>>>>>>> Stashed changes
             video {
                 width: 100%;
                 display: block;
@@ -327,7 +491,10 @@
                 box-shadow: 0 10px 20px rgba(0,0,0,0.15);
             }
         
+<<<<<<< Updated upstream
             /* --- 范式标题 --- */
+=======
+>>>>>>> Stashed changes
             .paradigm-title {
                 width: 100%;
                 text-align: center;
@@ -350,7 +517,10 @@
                 color: #444;
             }
         
+<<<<<<< Updated upstream
             /* --- 按钮组美化 --- */
+=======
+>>>>>>> Stashed changes
             .scene-selector {
                 display: flex;
                 flex-wrap: wrap;
@@ -394,9 +564,15 @@
             }
         </style>
         
+<<<<<<< Updated upstream
         <div class="sub-section">
             <h1 class="text">Quantitative Comparisons</h1>
             <p class="text">
+=======
+        <div class="sub-section l-screen">
+            <h1 class="text">Quantitative Comparisons</h1>
+            <p class="text text-center">
+>>>>>>> Stashed changes
                 Comparison with state-of-the-art methods. 
                 <br><span style="font-size: 0.9em; color: #888;">Play, pause, or drag the progress bar on <em>any</em> video to control them all simultaneously!</span>
             </p>
@@ -461,9 +637,15 @@
         </div>
         
         
+<<<<<<< Updated upstream
         <div class="sub-section" style="margin-top: 80px;">
             <h1 class="text">Real-world Comparisons</h1>
             <p class="text">
+=======
+        <div class="sub-section l-screen">
+            <h1 class="text">Real-world Comparisons</h1>
+            <p class="text text-center">
+>>>>>>> Stashed changes
                 Qualitative comparisons on real-world dynamic scenes.
             </p>
         
